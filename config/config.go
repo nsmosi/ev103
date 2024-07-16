@@ -3,6 +3,8 @@ package config
 import (
 	"fmt"
 	"os"
+
+	"gopkg.in/yaml.v2"
 )
 
 type Config struct {
@@ -16,7 +18,6 @@ type Config struct {
 	ApiServer   string `yaml:"api_server"`
 	EnableLoad  bool   `yaml:"enable_load"`
 	DataFile    string `yaml:"data_file"`
-	BundleFile  string `yaml:"bundle_file"`
 }
 
 func LoadConfigData(configFilePath string) (*Config, error) {
@@ -26,5 +27,11 @@ func LoadConfigData(configFilePath string) (*Config, error) {
 		return nil, fmt.Errorf("failed to read config file: %v", err)
 	}
 
-	return nil, nil
+	var config Config
+	err = yaml.Unmarshal(configData, &config)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse YAML file: %v", err)
+	}
+
+	return &config, nil
 }
