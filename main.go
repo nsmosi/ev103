@@ -26,7 +26,13 @@ func main() {
 	}
 
 	db.InitRedis(configData.Rdbs.Address, configData.CrdbAddress)
+
 	err = insertdata.AddBundles(configData.BundleFile)
+	if err != nil {
+		log.Println(err)
+	}
+
+	err = insertdata.AddSimCards(configData.DataFile)
 	if err != nil {
 		log.Println(err)
 	}
