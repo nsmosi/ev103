@@ -43,7 +43,7 @@ func getRandomBundleId() string {
 		if err != nil {
 			log.Fatalf("failed to get bundle from database")
 		}
-		bundleIDs = append(bundleIDs, result["ID"])
+		bundleIDs = append(bundleIDs, result["id"])
 	}
 
 	source := rand.NewSource(time.Now().UnixNano())
