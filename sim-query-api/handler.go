@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func getSimData(context *gin.Context) {
+func getSimCard(context *gin.Context) {
 
 	var (
 		simData, bundle map[string]string
@@ -19,6 +19,7 @@ func getSimData(context *gin.Context) {
 	msisdn := context.Param("msisdn")
 	key := "msisdn:" + msisdn
 
+	// loop over redis Clients
 	for _, client := range db.Clients {
 		simData, err = client.HGetAll(db.Ctx, key).Result()
 		if err != nil {
@@ -28,18 +29,22 @@ func getSimData(context *gin.Context) {
 			bundleKey := "bundle:" + simData["bundle"]
 			bundle, err = db.CrdbClient.HGetAll(db.Ctx, bundleKey).Result()
 			if err != nil {
-				context.JSON(http.StatusInternalServerError, gin.H{"Error": "could not fetch Bundle Id from db"})
+				context.JSON(http.StatusInternalServerError, gin.H{"Error": "could not fetch Bundle from db"})
 			}
 			break
 		}
 	}
 
 	if len(simData) == 0 {
-		context.JSON(http.StatusBadRequest, gin.H{"message": "sim card data not found"})
+		context.JSON(http.StatusBadRequest, gin.H{"message": "sim card does not exist"})
 	} else {
 		response = ResponseFormatter(simData, bundle)
 	}
 
-	context.IndentedJSON(http.StatusOK, response)
+	context.IndentedJSON(http.StatusFound, response)
+
+}
+
+func deleteSimCard(context *gin.Context) {
 
 }
