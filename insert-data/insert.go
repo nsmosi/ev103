@@ -22,7 +22,6 @@ func AddSimCards(filePath string) error {
 	totalRedis := len(db.Clients)
 	totalInsertedRecords := 0
 
-	// Loop through CSV data (sim cards data)
 	for _, record := range records {
 
 		msisdn := record[0]
@@ -45,7 +44,6 @@ func AddSimCards(filePath string) error {
 			}
 		}
 
-		//insert created Map into database
 		err = db.Clients[shardIndex].HSet(db.Ctx, key, recordMap).Err()
 		if err != nil {
 			return fmt.Errorf("inserting sim cards data into db failed %w", err)
@@ -73,7 +71,6 @@ func AddBundles(filePath string) error {
 		log.Fatalf("could not Load CSV data")
 	}
 
-	// loop through Bundles
 	for _, bundle := range bundles {
 		key := "bundle:" + bundle[0]
 
@@ -85,14 +82,13 @@ func AddBundles(filePath string) error {
 			}
 		}
 
-		//insert vreated Map into database
 		err := db.CrdbClient.HSet(db.Ctx, key, recordMap).Err()
 		if err != nil {
 			return fmt.Errorf("inserting bundles into db failed: %w", err)
 		}
 	}
 
-	log.Printf("inserting bundles was successful")
+	log.Printf("inserting bundles was successful !")
 
 	return nil
 
