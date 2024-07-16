@@ -38,3 +38,11 @@ func AddSimCards(filePath string) error {
 	}
 	return nil
 }
+
+func getShard(msisdn string, totalShards int) int {
+
+	// Use the last digit of the MSISDN as the shard key
+	lastDigit := msisdn[len(msisdn)-1]
+	shard := int(lastDigit-'0') % totalShards
+	return shard
+}
