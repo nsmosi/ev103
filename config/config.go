@@ -1,5 +1,10 @@
 package config
 
+import (
+	"fmt"
+	"os"
+)
+
 type Config struct {
 	App struct {
 		Version string `yaml:"version"`
@@ -15,6 +20,11 @@ type Config struct {
 }
 
 func LoadConfigData(configFilePath string) (*Config, error) {
+
+	configData, err := os.ReadFile(configFilePath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read config file: %v", err)
+	}
 
 	return nil, nil
 }
