@@ -2,6 +2,9 @@ package insertdata
 
 import (
 	"log"
+	"time"
+
+	"math/rand"
 
 	"github.com/SardarAndimeh/ev101/db"
 	"github.com/go-redis/redis/v8"
@@ -25,4 +28,28 @@ func checkKeyExists(client *redis.Client, key string) bool {
 		return true
 	}
 	return false
+}
+
+func getRandomBundleId() string {
+
+	var bundleIDs []string
+	keys, err := db.CrdbClient.Keys(db.Ctx, "*").Result()
+	if err != nil {
+		log.Fatalf("error geting bundle keys")
+	}
+
+	for _, key := range keys {
+		result, err := db.CrdbClient.HGetAll(db.Ctx, key).Result()
+		if err != nil {
+			log.Fatalf("failed to get bundle from database")
+		}
+		bundleIDs = append(bundleIDs, result["ID"])
+	}
+
+	source := rand.NewSource(time.Now().UnixNano())
+	r := rand.New(source)
+	randomIndex := r.Intn(len(bundleIDs))
+
+	return bundleIDs[randomIndex]
+
 }

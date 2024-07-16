@@ -32,7 +32,11 @@ func AddSimCards(filePath string) error {
 		recordMap := make(map[string]interface{})
 		for index, header := range headers {
 			if index < len(record) {
-				recordMap[header] = record[index]
+				if header == "BundleID" {
+					recordMap[header] = getRandomBundleId()
+				} else {
+					recordMap[header] = record[index]
+				}
 			}
 		}
 
