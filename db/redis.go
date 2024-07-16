@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"github.com/go-redis/redis/v8"
@@ -38,5 +39,7 @@ func InitRedis(rdbs string, crdb string) {
 		Password: "",
 		DB:       0,
 	})
+
+	fmt.Printf("initialze clients was successful %v , %v", Clients, CrdbClient)
 
 }

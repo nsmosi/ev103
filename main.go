@@ -2,10 +2,10 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 
 	"github.com/SardarAndimeh/ev101/config"
+	"github.com/SardarAndimeh/ev101/db"
 )
 
 func main() {
@@ -24,6 +24,6 @@ func main() {
 		log.Fatalf("failed to  load config data")
 	}
 
-	fmt.Println(configData)
+	db.InitRedis(configData.Rdbs.Address, configData.CrdbAddress)
 
 }
