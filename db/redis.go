@@ -21,6 +21,7 @@ func InitRedis(rdbs string, crdb string) {
 
 	Clients = make([]*redis.Client, len(rdbAddrs))
 
+	// Rdb Clients
 	for i, rdbAddr := range rdbAddrs {
 		client := redis.NewClient(&redis.Options{
 			Addr:     rdbAddr,
@@ -31,4 +32,11 @@ func InitRedis(rdbs string, crdb string) {
 		Clients[i] = client
 
 	}
+
+	CrdbClient = redis.NewClient(&redis.Options{
+		Addr:     crdb,
+		Password: "",
+		DB:       0,
+	})
+
 }
