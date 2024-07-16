@@ -44,3 +44,36 @@ func AddSimCards(filePath string) error {
 	}
 	return nil
 }
+
+func AddBundles(filePath string) error {
+
+	bundleHeader := []string{"ID", "UL", "DL", "Quota", "Duration", "Label", "Type"}
+
+	bundles, err := LoadCSV(filePath)
+	if err != nil {
+		log.Fatalf("could not Load CSV data")
+	}
+
+	// loop through Bundles
+	for _, bundle := range bundles {
+		key := "bundle:" + bundle[0]
+
+		// create a map of key and values for each bundle record ->  "ID": 1021 , "UL": 234534 ,....
+		recordMap := make(map[string]interface{})
+		for index, header := range bundleHeader {
+			if index < len(bundle) {
+				recordMap[header] = bundle[index]
+			}
+		}
+
+		//insert vreated Map into database
+		err := db.CrdbClient.HSet(db.Ctx, key, recordMap).Err()
+		if err != nil {
+			return fmt.Errorf("inserting bundles failed: %w", err)
+		}
+	}
+	log.Printf("inserting bundles was successful")
+
+	return nil
+
+}
