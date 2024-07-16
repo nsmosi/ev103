@@ -6,7 +6,7 @@ import (
 
 	"github.com/SardarAndimeh/ev101/config"
 	"github.com/SardarAndimeh/ev101/db"
-	insertdata "github.com/SardarAndimeh/ev101/insert-data"
+	simqueryapi "github.com/SardarAndimeh/ev101/sim-query-api"
 	"github.com/gin-gonic/gin"
 )
 
@@ -28,15 +28,17 @@ func main() {
 
 	db.InitRedis(configData.Rdbs.Address, configData.CrdbAddress)
 
-	runInsertion(configData)
-	// sim query api
-	router := gin.Default()
+	//runInsertion(configData)
 
-	router.Run("localhost:8080")
+	// sim query api
+	server := gin.Default()
+	simqueryapi.Routes(server)
+
+	server.Run(":8080")
 
 }
 
-func runInsertion(configData *config.Config) {
+/* func runInsertion(configData *config.Config) {
 	// insert data module
 	err := insertdata.AddBundles(configData.BundleFile)
 	if err != nil {
@@ -48,3 +50,4 @@ func runInsertion(configData *config.Config) {
 		log.Println(err)
 	}
 }
+*/
