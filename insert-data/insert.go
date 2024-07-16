@@ -15,12 +15,14 @@ func AddSimCards(filePath string) error {
 	}
 
 	headers := []string{"MSISDN", "IMSI", "ICCID", "Secret", "TAC", "EID", "CID", "IMEI", "BundleID"}
+	totalRedis := len(db.Clients)
 
 	// Loop through CSV data (sim cards data)
 	for _, record := range records {
 
 		msisdn := record[0]
 		key := "msisdn:" + msisdn
+		shardIndex := getShard(msisdn, totalRedis) // chose Redis Client according to Shard index (last 2 digits of MSISDN)
 
 		// create a map of key and values for each Sim card record ->  "MSISDN": 811502214250 , "IMSI": 217500013105250 ,....
 		recordMap := make(map[string]interface{})
@@ -31,7 +33,7 @@ func AddSimCards(filePath string) error {
 		}
 
 		//insert vreated Map into database
-		err = db.Clients[0].HSet(db.Ctx, key, recordMap).Err()
+		err = db.Clients[shardIndex].HSet(db.Ctx, key, recordMap).Err()
 		if err != nil {
 			return fmt.Errorf("inserting data into db (HSet) failed %w", err)
 		}
