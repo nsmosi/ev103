@@ -73,7 +73,7 @@ func AddBundles(filePath string) error {
 		//insert vreated Map into database
 		err := db.CrdbClient.HSet(db.Ctx, key, recordMap).Err()
 		if err != nil {
-			return fmt.Errorf("inserting bundles failed: %w", err)
+			return fmt.Errorf("inserting bundles into db failed: %w", err)
 		}
 	}
 	log.Printf("inserting bundles was successful")

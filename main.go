@@ -6,6 +6,7 @@ import (
 
 	"github.com/SardarAndimeh/ev101/config"
 	"github.com/SardarAndimeh/ev101/db"
+	insertdata "github.com/SardarAndimeh/ev101/insert-data"
 )
 
 func main() {
@@ -25,5 +26,9 @@ func main() {
 	}
 
 	db.InitRedis(configData.Rdbs.Address, configData.CrdbAddress)
+	err = insertdata.AddBundles(configData.BundleFile)
+	if err != nil {
+		log.Println(err)
+	}
 
 }
