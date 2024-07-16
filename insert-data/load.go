@@ -1,6 +1,7 @@
 package insertdata
 
 import (
+	"encoding/csv"
 	"fmt"
 	"os"
 )
@@ -13,5 +14,12 @@ func LoadCSV(filePath string) ([][]string, error) {
 	}
 	defer file.Close()
 
-	return nil, nil
+	reader := csv.NewReader(file)
+
+	records, err := reader.ReadAll()
+	if err != nil {
+		return nil, fmt.Errorf("could not read CSV file %w", err)
+	}
+
+	return records, nil
 }
