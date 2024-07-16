@@ -42,9 +42,23 @@ func getSimData(context *gin.Context) {
 			log.Fatalf("failed to fetch data from db")
 		}
 		if len(record) > 0 {
-			context.JSON(http.StatusOK, gin.H{"found the sim card": record})
+			bundleKey := "bundle:" + record["bundle"]
+			bundle, err := db.CrdbClient.HGetAll(db.Ctx, bundleKey).Result()
+			if err != nil {
+				context.JSON(http.StatusInternalServerError, gin.H{"Error": "could not load Bundle Id from db"})
+			}
+
+			context.IndentedJSON(http.StatusFound, gin.H{
+				"message":  "found data",
+				"sim card": record,
+				"bundle":   bundle,
+			})
 			break
 		}
+	}
+
+	if len(record) == 0 {
+		context.JSON(http.StatusBadRequest, gin.H{"message": "sim card data not found"})
 	}
 
 }
