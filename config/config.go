@@ -18,6 +18,7 @@ type Config struct {
 	ApiServer   string `yaml:"api_server"`
 	EnableLoad  bool   `yaml:"enable_load"`
 	DataFile    string `yaml:"data_file"`
+	BundleFile  string `yaml:"bundle_file"`
 }
 
 func LoadConfigData(configFilePath string) (*Config, error) {
