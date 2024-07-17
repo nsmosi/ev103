@@ -17,7 +17,7 @@ func AddSimCards(filePath string) error {
 		log.Fatalf("could not Load CSV data: %v", err)
 	}
 
-	headers := []string{"msisdn", "imsi", "iccid", "secret", "tac", "eid", "cid", "imei", "bundle"}
+	headers := []string{"msisdn", "imsi", "iccid", "secret", "tac", "eid", "cid", "imei", "bundleID"}
 
 	totalRedis := len(db.Clients)
 	totalInsertedRecords := 0
@@ -36,7 +36,7 @@ func AddSimCards(filePath string) error {
 		recordMap := make(map[string]interface{})
 		for index, header := range headers {
 			if index < len(record) {
-				if header == "bundle" {
+				if header == "bundleID" {
 					recordMap[header] = getRandomBundleId()
 				} else {
 					recordMap[header] = record[index]

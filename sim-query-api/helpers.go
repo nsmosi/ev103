@@ -11,15 +11,15 @@ type Bundle struct {
 }
 
 type SimCard struct {
-	Msisdn string `json:"msisdn"`
-	Imsi   string `json:"imsi"`
-	Iccid  string `json:"iccid"`
-	Secret string `json:"secret"`
-	Tac    string `json:"tac"`
-	Eid    string `json:"eid"`
-	Cid    string `json:"cid"`
-	Imei   string `json:"imei"`
-	Bundle Bundle `json:"bundle"`
+	Msisdn   string `json:"msisdn"`
+	Imsi     string `json:"imsi"`
+	Iccid    string `json:"iccid"`
+	Secret   string `json:"secret"`
+	Tac      string `json:"tac"`
+	Eid      string `json:"eid"`
+	Cid      string `json:"cid"`
+	Imei     string `json:"imei"`
+	BundleID Bundle `json:"bundle"`
 }
 
 func ResponseFormatter(simData map[string]string, bundle map[string]string) SimCard {
@@ -32,7 +32,7 @@ func ResponseFormatter(simData map[string]string, bundle map[string]string) SimC
 		Eid:    simData["eid"],
 		Cid:    simData["cid"],
 		Imei:   simData["imei"],
-		Bundle: Bundle{
+		BundleID: Bundle{
 			ID:       bundle["id"],
 			Ul:       bundle["ul"],
 			Dl:       bundle["dl"],

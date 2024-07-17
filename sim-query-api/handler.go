@@ -1,7 +1,6 @@
 package simqueryapi
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/SardarAndimeh/ev101/db"
@@ -23,10 +22,10 @@ func getSimCard(context *gin.Context) {
 	for _, client := range db.Clients {
 		simData, err = client.HGetAll(db.Ctx, key).Result()
 		if err != nil {
-			log.Fatalf("could not fetch sim data from db")
+			context.JSON(http.StatusInternalServerError, gin.H{"error": "could not fetch sim card from db"})
 		}
 		if len(simData) > 0 {
-			bundleKey := "bundle:" + simData["bundle"]
+			bundleKey := "bundle:" + simData["bundleID"]
 			bundle, err = db.CrdbClient.HGetAll(db.Ctx, bundleKey).Result()
 			if err != nil {
 				context.JSON(http.StatusInternalServerError, gin.H{
