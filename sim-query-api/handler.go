@@ -29,7 +29,10 @@ func getSimCard(context *gin.Context) {
 			bundleKey := "bundle:" + simData["bundle"]
 			bundle, err = db.CrdbClient.HGetAll(db.Ctx, bundleKey).Result()
 			if err != nil {
-				context.JSON(http.StatusInternalServerError, gin.H{"Error": "could not fetch Bundle from db"})
+				context.JSON(http.StatusInternalServerError, gin.H{
+					"Error":  "could not fetch Bundle from db",
+					"Detail": err.Error(),
+				})
 			}
 			break
 		}
@@ -46,5 +49,28 @@ func getSimCard(context *gin.Context) {
 }
 
 func deleteSimCard(context *gin.Context) {
+
+	msisdn := context.Param("msisdn")
+	key := "msisdn:" + msisdn
+
+	var result int64
+	var err error
+
+	for _, client := range db.Clients {
+		result, err = client.Del(db.Ctx, key).Result()
+		if result > 0 {
+			break
+		}
+		if err != nil {
+			context.JSON(http.StatusInternalServerError, gin.H{
+				"Error":  "could not delete sim card",
+				"Detail": err.Error(),
+			})
+		}
+	}
+
+	context.JSON(http.StatusFound, gin.H{
+		"status": "success",
+	})
 
 }

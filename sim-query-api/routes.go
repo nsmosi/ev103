@@ -7,6 +7,6 @@ import (
 func Routes(server *gin.Engine) {
 
 	server.GET("/ev101/api/sims/:msisdn", getSimCard)
-	server.DELETE("/ev101/api/sims/:msisdn", deleteSimCard())
+	server.DELETE("/ev101/api/sims/:msisdn", deleteSimCard)
 
 }
