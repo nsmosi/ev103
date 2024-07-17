@@ -18,7 +18,7 @@ func getShard(msisdn string, totalShards int) int {
 	return shard
 }
 
-func checkKeyExists(client *redis.Client, key string) bool {
+func keyExists(client *redis.Client, key string) bool {
 
 	exists, err := client.Exists(db.Ctx, key).Result()
 	if err != nil {

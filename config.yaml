@@ -5,5 +5,5 @@ rdbs:
 crdb_addr: "127.0.0.1:6379"
 api_server: "127.0.0.1"
 enable_load: true
-data_file: "files/simdata.csv"
+data_file: "files/data.csv"
 bundle_file: "files/bundles.csv"

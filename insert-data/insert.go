@@ -14,7 +14,7 @@ func AddSimCards(filePath string) error {
 
 	records, err := LoadCSV(filePath)
 	if err != nil {
-		log.Fatalf("could not Load CSV data: %v", err)
+		return fmt.Errorf("could not Load CSV data: %w", err)
 	}
 
 	headers := []string{"msisdn", "imsi", "iccid", "secret", "tac", "eid", "cid", "imei", "bundleID"}
@@ -28,36 +28,35 @@ func AddSimCards(filePath string) error {
 		key := "msisdn:" + msisdn
 		shardIndex := getShard(msisdn, totalRedis) // chose Redis Client according to Shard index (last 2 digits of MSISDN)
 
-		if checkKeyExists(db.Clients[shardIndex], key) {
-			continue
-		}
+		if !keyExists(db.Clients[shardIndex], key) {
 
-		// create a map of key and values for each Sim card record ->  "MSISDN": 811502214250 , "IMSI": 217500013105250 ,....
-		recordMap := make(map[string]interface{})
-		for index, header := range headers {
-			if index < len(record) {
-				if header == "bundleID" {
-					recordMap[header] = getRandomBundleId()
-				} else {
-					recordMap[header] = record[index]
+			// create a map of key and values for each Sim card record ->  "MSISDN": 811502214250 , "IMSI": 217500013105250 ,....
+			recordMap := make(map[string]interface{})
+			for index, header := range headers {
+				if index < len(record) {
+					if header == "bundleID" {
+						recordMap[header] = getRandomBundleId()
+					} else {
+						recordMap[header] = record[index]
+					}
 				}
 			}
-		}
 
-		err = db.Clients[shardIndex].HSet(db.Ctx, key, recordMap).Err()
-		if err != nil {
-			return fmt.Errorf("inserting sim cards data into db failed %w", err)
+			err = db.Clients[shardIndex].HSet(db.Ctx, key, recordMap).Err()
+			if err != nil {
+				return fmt.Errorf("inserting sim cards data into db failed %w", err)
+			}
+			totalInsertedRecords++
 		}
-		totalInsertedRecords++
 	}
 
-	log.Printf("inserting Sim cards was successful !")
+	log.Printf("inserting Sim cards was successfull !")
 
 	// a brief report
 	elapsed := time.Since(start)
 
 	fmt.Printf("Duration : %v \n", elapsed)
-	fmt.Printf("Number of inserted records : %v", totalInsertedRecords)
+	fmt.Printf("Number of inserted records : %v \n", totalInsertedRecords)
 
 	return nil
 }
@@ -88,7 +87,7 @@ func AddBundles(filePath string) error {
 		}
 	}
 
-	log.Printf("inserting bundles was successful !")
+	log.Printf("inserting bundles was successfull !")
 
 	return nil
 

@@ -38,7 +38,8 @@ func main() {
 
 }
 
-/* func runInsertion(configData *config.Config) {
+/*
+func runInsertion(configData *config.Config) {
 	// insert data module
 	err := insertdata.AddBundles(configData.BundleFile)
 	if err != nil {
